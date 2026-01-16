@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portofolio Radiologi - Universitas Airlangga</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts: Inter & Digital -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        radioBlue: '#003366',   // Deep Navy (Primary Background)
+                        radioLight: '#004080',  // Lighter Navy
+                        radioCream: '#fdf5e6',  // Old Lace (Text/Accent)
+                        accent: '#2997ff',      // Tech Blue for PACS
+                    },
+                    fontFamily: {
+                        sans: ['Inter', '-apple-system', 'sans-serif'],
+                        mono: ['Share Tech Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 25px rgba(253, 245, 230, 0.2)',
+                        'icon': '0 10px 20px -5px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #003366;
+            color: #fdf5e6;
+            overflow-x: hidden;
+        }
+
+        .main-gradient {
+            background: linear-gradient(135deg, #003366 0%, #001a33 100%);
+        }
+
+        /* Glassmorphism */
+        .ios-glass {
+            background: linear-gradient(145deg, rgba(0, 51, 102, 0.6), rgba(0, 25, 51, 0.7));
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(253, 245, 230, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        /* Hover Effects */
+        .ios-interactive {
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .ios-interactive:hover {
+            transform: scale(1.02);
+            background: linear-gradient(145deg, rgba(0, 64, 128, 0.6), rgba(0, 30, 60, 0.7));
+            border-color: rgba(253, 245, 230, 0.3);
+            box-shadow: 0 0 30px rgba(0, 51, 102, 0.5);
+        }
+
+        /* Utilities */
+        .reveal {
+            opacity: 0;
+            transform: scale(0.95) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* PACS SCAN LINE ANIMATION */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(253, 245, 230, 0.5);
+            box-shadow: 0 0 15px rgba(253, 245, 230, 0.8);
+            animation: scan 3s linear infinite;
+            display: none;
+            z-index: 10;
+        }
+        .pacs-viewer.active .scan-line {
+            display: block;
+        }
+        @keyframes scan {
+            0% { top: 0%; opacity: 0; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+
+        /* App Icon Float */
+        .app-icon {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+        .app-icon:hover {
+            transform: translateY(-8px) scale(1.1);
+            box-shadow: 0 15px 30px -5px rgba(0,0,0,0.4);
+            z-index: 10;
+        }
+
+        /* Nav Link Active */
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 6px;
+            height: 6px;
+            background-color: #fdf5e6;
+            border-radius: 50%;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .nav-link:hover::before {
+            transform: translateX(-50%) scale(1);
+        }
+    </style>
+</head>
+<body class="selection:bg-radioCream selection:text-radioBlue main-gradient min-h-screen">
+
+    <!-- NAVBAR -->
+    <nav id="navbar" class="fixed w-full z-50 transition-all duration-500 py-4 px-6 border-b border-transparent bg-radioBlue/50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="flex items-center gap-3 group cursor-pointer">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-radioCream to-[#dcc8a0] flex items-center justify-center shadow-glow group-hover:rotate-12 transition-transform duration-300">
+                    <i class="fas fa-radiation text-radioBlue text-xl"></i>
+                </div>
+                <div class="flex flex-col leading-tight">
+                    <span class="text-radioCream font-bold tracking-wide text-lg">Radiologi<span class="opacity-70"> Pencitraan</span></span>
+                </div>
+            </div>
+            
+            <!-- Desktop Menu -->
+            <div class="hidden md:flex items-center space-x-1 bg-radioCream/10 px-2 py-1.5 rounded-full border border-radioCream/10 backdrop-blur-xl">
+                <a href="#home" class="nav-link px-5 py-2 text-sm font-medium text-radioCream/80 hover:text-radioCream transition-colors">Beranda</a>
+                <a href="#pacs" class="nav-link px-5 py-2 text-sm font-medium text-radioCream/80 hover:text-radioCream transition-colors">Sistem PACS</a>
+                <a href="#klinis" class="nav-link px-5 py-2 text-sm font-medium text-radioCream/80 hover:text-radioCream transition-colors">Klinis</a>
+                <a href="#projek" class="nav-link px-5 py-2 text-sm font-medium text-radioCream/80 hover:text-radioCream transition-colors">Projek</a>
+                <a href="#contact" class="px-5 py-2 ml-2 text-sm font-bold bg-radioCream text-radioBlue rounded-full hover:bg-white transition-all duration-300 shadow-lg hover:shadow-glow transform hover:scale-105">
+                    Kontak
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-radioCream p-2 rounded-full hover:bg-radioCream/10 transition">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-4 right-4 ios-glass rounded-3xl p-6 flex flex-col space-y-4 shadow-2xl origin-top transform transition-all z-40">
+            <a href="#home" class="text-lg text-radioCream font-medium p-2 border-b border-radioCream/10">Beranda</a>
+            <a href="#pacs" class="text-lg text-radioCream font-medium p-2 border-b border-radioCream/10">Rekaman visual</a>
+            <a href="#klinis" class="text-lg text-radioCream font-medium p-2 border-b border-radioCream/10">Kompetensi Klinis</a>
+            <a href="#projek" class="text-lg text-radioCream font-medium p-2 border-b border-radioCream/10">Projek Akademik</a>
+            <a href="#contact" class="text-lg text-radioCream font-medium p-2">Kontak</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <!-- Background Elements -->
+        <div class="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-radioCream/5 rounded-full blur-[100px] animate-pulse"></div>
+        <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-radioBlue to-transparent z-10"></div>
+        
+        <div class="relative z-20 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            
+            <!-- Text Content -->
+            <div class="space-y-8 reveal active text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-radioCream/30 bg-radioCream/5 backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-[#facc15] animate-pulse"></span>
+                    <span class="text-radioCream/90 text-xs font-bold uppercase tracking-wider">Universitas Airlangga</span>
+                </div>
+                
+                <h1 class="text-5xl lg:text-8xl font-bold tracking-tight leading-tight text-radioCream drop-shadow-lg">
+                    Imaging <br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-radioCream to-[#bda06d]">The Future.</span>
+                </h1>
+                
+                <p class="text-radioCream/70 max-w-lg leading-relaxed text-lg mx-auto lg:mx-0 font-light">
+                    Mahasiswa Teknologi Radiologi Pencitraan dengan fokus pada presisi diagnostik, keselamatan radiasi, dan integrasi teknologi medis terkini.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+                    <a href="#pacs" class="group px-8 py-4 bg-radioCream text-radioBlue font-bold rounded-full hover:bg-white transition-all duration-300 transform hover:scale-105 shadow-[0_0_30px_rgba(253,245,230,0.2)]">
+                        EXPLORE
+                        <i class="fas fa-desktop ml-2 group-hover:-translate-y-1 transition-transform"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Hero Visual -->
+            <div class="relative reveal flex justify-center lg:justify-end perspective-1000">
+                <div class="relative w-80 lg:w-[400px] aspect-[4/5] ios-glass rounded-[40px] p-2 transform transition-transform duration-700 hover:rotate-2 shadow-2xl border border-radioCream/20">
+                    <div class="w-full h-full rounded-[32px] overflow-hidden relative bg-black">
+                        <img src="foto diri gw.jpg" alt="Radiology" class="w-full h-full object-cover opacity-80 hover:opacity-100 transition duration-500">
+                        <div class="absolute bottom-0 w-full p-6 bg-gradient-to-t from-black to-transparent">
+                            <h3 class="text-white font-bold text-xl">Miftahul Huda</h3>
+                            <p class="text-gray-400 text-sm">Surabaya, Indonesia</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SISTEM PACS INTERAKTIF (Now occupying the 'Profil' slot) -->
+    <section id="pacs" class="py-24 bg-[#00264d] relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-radioCream/30 to-transparent"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl lg:text-5xl font-bold mb-4 text-radioCream">Rekaman <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-white">Visual</span></h2>
+                <p class="text-radioCream/60">Simulasi antarmuka modalitas radiologi</p>
+                <p class="text-radioCream/60">Klik tombol untuk memuat citra</p>
+
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 reveal">
+                <!-- Sidebar Controls -->
+                <div class="lg:col-span-3 space-y-4">
+                    <button onclick="changePacs('xray')" class="pacs-btn w-full ios-glass p-4 rounded-2xl flex items-center gap-4 hover:bg-radioCream/10 transition-all border-l-4 border-transparent hover:border-radioCream active">
+                        <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-300"><i class="fas fa-bone"></i></div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-radioCream">X-Ray</h4>
+                            <p class="text-xs text-radioCream/50">Thorax PA</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="changePacs('ct')" class="pacs-btn w-full ios-glass p-4 rounded-2xl flex items-center gap-4 hover:bg-radioCream/10 transition-all border-l-4 border-transparent hover:border-radioCream">
+                        <div class="w-10 h-10 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-300"><i class="fas fa-ring"></i></div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-radioCream">CT Scan</h4>
+                            <p class="text-xs text-radioCream/50">Head Axial</p>
+                        </div>
+                    </button>
+                    
+                    <button onclick="changePacs('mri')" class="pacs-btn w-full ios-glass p-4 rounded-2xl flex items-center gap-4 hover:bg-radioCream/10 transition-all border-l-4 border-transparent hover:border-radioCream">
+                        <div class="w-10 h-10 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-300"><i class="fas fa-magnet"></i></div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-radioCream">MRI</h4>
+                            <p class="text-xs text-radioCream/50">Brain Sagittal</p>
+                        </div>
+                    </button>
+
+                
+                </div>
+
+                <!-- PACS Viewer Main Screen -->
+                <div class="lg:col-span-9">
+                    <div class="pacs-viewer relative h-[550px] bg-black rounded-3xl border border-radioCream/20 shadow-2xl overflow-hidden flex items-center justify-center group active">
+                        <!-- Scan Line Animation -->
+                        <div class="scan-line"></div>
+                        
+                        <!-- Main Image -->
+                        <img id="pacs-display" src="23ff2684-a638-4320-a35b-490b1b326e43.jpg" class="w-full h-full object-contain opacity-90 transition-opacity duration-300" alt="Medical Scan">
+                        
+                        <!-- HUD Overlay -->
+                        <div class="absolute top-4 left-4 font-mono text-xs text-radioCream/70 pointer-events-none">
+                            <p class="text-accent font-bold">UNAIR PACS v2.0</p>
+                            <p id="pacs-modality" class="mt-1">CR - THORAX</p>
+                            <p>W: 2048 L: 1024</p>
+                        </div>
+                        
+                        <div class="absolute top-4 right-4 font-mono text-xs text-radioCream/70 pointer-events-none text-right">
+                            <p>ID: <span id="pacs-id" class="text-white">REQ-001</span></p>
+                            <p>kV: <span id="pacs-kv">120</span></p>
+                            <p>mAs: <span id="pacs-mas">5.0</span></p>
+                        </div>
+
+                        <!-- Bottom Toolbar -->
+                        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 bg-gray-900/80 backdrop-blur-md px-8 py-3 rounded-full border border-white/10 flex gap-8 shadow-xl">
+                            <div class="flex flex-col items-center gap-1 group/tool cursor-pointer">
+                                <i class="fas fa-search-plus text-gray-400 group-hover/tool:text-white transition"></i>
+                                <span class="text-[9px] text-gray-500 uppercase">Zoom</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1 group/tool cursor-pointer">
+                                <i class="fas fa-adjust text-gray-400 group-hover/tool:text-white transition"></i>
+                                <span class="text-[9px] text-gray-500 uppercase">Contrast</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1 group/tool cursor-pointer">
+                                <i class="fas fa-ruler text-gray-400 group-hover/tool:text-white transition"></i>
+                                <span class="text-[9px] text-gray-500 uppercase">Measure</span>
+                            </div>
+                            <div class="flex flex-col items-center gap-1 group/tool cursor-pointer">
+                                <i class="fas fa-layer-group text-gray-400 group-hover/tool:text-white transition"></i>
+                                <span class="text-[9px] text-gray-500 uppercase">Stack</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODALITAS / KOMPETENSI KLINIS (Updated with 6 Modalities) -->
+    <section id="klinis" class="py-24 bg-radioBlue px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-4xl font-bold mb-4 text-radioCream">Kompetensi <span class="opacity-70">Klinis</span></h2>
+                <div class="h-1 w-24 bg-gradient-to-r from-radioCream to-transparent mx-auto rounded-full"></div>
+                <p class="mt-4 text-radioCream/60">Penguasaan teknologi pencitraan medis terkini.</p>
+            </div>
+
+            <!-- Grid 6 Modalitas -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6 reveal">
+                
+                <!-- 1. X-Ray -->
+                <div class="ios-glass p-6 rounded-[2rem] hover:bg-white/5 transition duration-300 group cursor-pointer border border-white/5">
+                    <div class="w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center mb-4 text-blue-300 group-hover:scale-110 transition">
+                        <i class="fas fa-x-ray text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">X-Ray</h3>
+                    <p class="text-sm text-radioCream/50">Radiografi umum, teknik posisi ekstremitas & thorax, proteksi radiasi dasar.</p>
+                </div>
+
+                <!-- 2. CT Scan -->
+                <div class="ios-glass p-6 rounded-[2rem] hover:bg-white/5 transition duration-300 group cursor-pointer border border-white/5">
+                    <div class="w-14 h-14 rounded-full bg-purple-500/20 flex items-center justify-center mb-4 text-purple-300 group-hover:scale-110 transition">
+                        <i class="fas fa-ring text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">CT Scan</h3>
+                    <p class="text-sm text-radioCream/50">Computed Tomography multi-slice, manajemen kontras, rekonstruksi 3D.</p>
+                </div>
+
+                <!-- 3. MRI -->
+                <div class="ios-glass p-6 rounded-[2rem] hover:bg-white/5 transition duration-300 group cursor-pointer border border-white/5">
+                    <div class="w-14 h-14 rounded-full bg-pink-500/20 flex items-center justify-center mb-4 text-pink-300 group-hover:scale-110 transition">
+                        <i class="fas fa-magnet text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">MRI</h3>
+                    <p class="text-sm text-radioCream/50">Magnetic Resonance Imaging, screening keselamatan, sequence T1/T2.</p>
+                </div>
+
+                <!-- 4. USG -->
+                <div class="ios-glass p-6 rounded-[2rem] hover:bg-white/5 transition duration-300 group cursor-pointer border border-white/5">
+                    <div class="w-14 h-14 rounded-full bg-green-500/20 flex items-center justify-center mb-4 text-green-300 group-hover:scale-110 transition">
+                        <i class="fas fa-wave-square text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">USG</h3>
+                    <p class="text-sm text-radioCream/50">Ultrasonografi, persiapan pasien, bantuan transduser sonografi.</p>
+                </div>
+
+                <!-- 5. SPECT -->
+                <div class="ios-glass p-6 rounded-[2rem] hover:bg-white/5 transition duration-300 group cursor-pointer border border-white/5">
+                    <div class="w-14 h-14 rounded-full bg-yellow-500/20 flex items-center justify-center mb-4 text-yellow-300 group-hover:scale-110 transition">
+                        <i class="fas fa-atom text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">SPECT</h3>
+                    <p class="text-sm text-radioCream/50">Single Photon Emission CT, kedokteran nuklir, peluruhan gamma.</p>
+                </div>
+
+                <!-- 6. PET CT -->
+                <div class="ios-glass p-6 rounded-[2rem] hover:bg-white/5 transition duration-300 group cursor-pointer border border-white/5">
+                    <div class="w-14 h-14 rounded-full bg-red-500/20 flex items-center justify-center mb-4 text-red-300 group-hover:scale-110 transition">
+                        <i class="fas fa-dna text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">PET CT</h3>
+                    <p class="text-sm text-radioCream/50">Positron Emission Tomography, fusi citra molekuler onkologi.</p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PROJEK AKADEMIK -->
+    <section id="projek" class="py-24 px-6 bg-[#001a33]">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 reveal">
+                <h2 class="text-4xl lg:text-5xl font-bold text-radioCream">Projek <span class="opacity-50">Akademik.</span></h2>
+                <div class="h-1 w-24 bg-gradient-to-r from-radioCream to-transparent mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 reveal">
+                <!-- Project 1 -->
+                <div class="group ios-glass rounded-[32px] p-6 hover:-translate-y-2 transition-transform duration-500 cursor-pointer">
+                    <div class="h-48 rounded-[20px] overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1579684385180-1ea55f6196e0?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-3 left-3 bg-radioBlue/80 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold tracking-wider border border-white/10">PROJEK</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">Proteksi Radiasi</h3>
+                    <p class="text-radioCream/60 text-sm leading-relaxed">
+                        Analisis optimasi dosis pada pemeriksaan CT Scan abdomen untuk pasien anak menggunakan prinsip ALARA.
+                    </p>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="group ios-glass rounded-[32px] p-6 hover:-translate-y-2 transition-transform duration-500 cursor-pointer">
+                    <div class="h-48 rounded-[20px] overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1584036561566-b93744363369?q=80&w=2012&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-3 left-3 bg-radioBlue/80 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold tracking-wider border border-white/10">STUDI KASUS</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">MRI Safety Zone</h3>
+                    <p class="text-radioCream/60 text-sm leading-relaxed">
+                        Perancangan ulang tata letak zona keselamatan MRI di instalasi radiologi simulasi kampus.
+                    </p>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="group ios-glass rounded-[32px] p-6 hover:-translate-y-2 transition-transform duration-500 cursor-pointer">
+                    <div class="h-48 rounded-[20px] overflow-hidden relative mb-6">
+                        <img src="https://images.unsplash.com/photo-1559757175-0b31043b8118?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <div class="absolute top-3 left-3 bg-radioBlue/80 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold tracking-wider border border-white/10">PKL</div>
+                    </div>
+                    <h3 class="text-xl font-bold text-radioCream mb-2">Manajemen Kontras</h3>
+                    <p class="text-radioCream/60 text-sm leading-relaxed">
+                        Evaluasi prosedur penyuntikan media kontras pada pasien dengan gangguan fungsi ginjal.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-24 bg-gradient-to-b from-[#003366] to-[#001122] border-t border-white/5">
+        <div class="max-w-5xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-radioCream mb-12 reveal">Hubungi <span class="text-transparent bg-clip-text bg-gradient-to-r from-radioCream to-blue-300">Saya.</span></h2>
+            
+            <div class="grid grid-cols-3 md:grid-cols-5 gap-8 reveal justify-items-center">
+                <a href="https://wa.me/" target="_blank" class="app-icon group flex flex-col items-center gap-3">
+                    <div class="w-20 h-20 rounded-[1.5rem] bg-[#25D366] flex items-center justify-center shadow-icon border border-white/10 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent"></div>
+                        <i class="fab fa-whatsapp text-4xl text-white drop-shadow-md"></i>
+                    </div>
+                    <span class="text-sm font-medium text-radioCream/80 group-hover:text-radioCream">WhatsApp</span>
+                </a>
+                <a href="#" target="_blank" class="app-icon group flex flex-col items-center gap-3">
+                    <div class="w-20 h-20 rounded-[1.5rem] bg-[#0077b5] flex items-center justify-center shadow-icon border border-white/10 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent"></div>
+                        <i class="fab fa-linkedin-in text-4xl text-white drop-shadow-md"></i>
+                    </div>
+                    <span class="text-sm font-medium text-radioCream/80 group-hover:text-radioCream">LinkedIn</span>
+                </a>
+                <a href="#" target="_blank" class="app-icon group flex flex-col items-center gap-3">
+                    <div class="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-[#833ab4] via-[#fd1d1d] to-[#fcb045] flex items-center justify-center shadow-icon border border-white/10 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+                        <i class="fab fa-instagram text-4xl text-white drop-shadow-md"></i>
+                    </div>
+                    <span class="text-sm font-medium text-radioCream/80 group-hover:text-radioCream">Instagram</span>
+                </a>
+                <a href="#" target="_blank" class="app-icon group flex flex-col items-center gap-3">
+                    <div class="w-20 h-20 rounded-[1.5rem] bg-[#0088cc] flex items-center justify-center shadow-icon border border-white/10 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent"></div>
+                        <i class="fab fa-telegram-plane text-4xl text-white drop-shadow-md"></i>
+                    </div>
+                    <span class="text-sm font-medium text-radioCream/80 group-hover:text-radioCream">Telegram</span>
+                </a>
+                <a href="mailto:email@example.com" class="app-icon group flex flex-col items-center gap-3">
+                    <div class="w-20 h-20 rounded-[1.5rem] bg-gray-500 flex items-center justify-center shadow-icon border border-white/10 relative overflow-hidden">
+                         <div class="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent"></div>
+                        <i class="fas fa-envelope text-4xl text-white drop-shadow-md"></i>
+                    </div>
+                    <span class="text-sm font-medium text-radioCream/80 group-hover:text-radioCream">Email</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="py-12 bg-[#001122] border-t border-white/5 text-center">
+        <p class="text-radioCream/40 text-sm font-mono">
+            &copy; RADOLOGI PENCITRAAN
+        </p>
+    </footer>
+
+    <!-- LOGIC -->
+    <script>
+        // 1. Mobile Menu
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // 2. Reveal Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        function checkReveal() {
+            const triggerBottom = window.innerHeight * 0.9;
+            revealElements.forEach(element => {
+                const boxTop = element.getBoundingClientRect().top;
+                if (boxTop < triggerBottom) {
+                    element.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', checkReveal);
+        checkReveal();
+
+        // 3. PACS SIMULATOR LOGIC
+        const pacsData = {
+            'xray': {
+                img: '12.png',
+                modality: 'CR - THORAX PA',
+                kv: '120',
+                mas: '5.0',
+                id: 'REQ-001'
+            },
+            'ct': {
+                img: 'ct scan.png', 
+                modality: 'CT - HEAD AXIAL',
+                kv: '140',
+                mas: '220',
+                id: 'REQ-002'
+            },
+            'mri': {
+                img: 'mri.jpg', 
+                modality: 'MRI - BRAIN T2',
+                kv: '-',
+                mas: '-',
+                id: 'REQ-003'
+            }
+        };
+
+        function changePacs(type) {
+            const display = document.getElementById('pacs-display');
+            const data = pacsData[type];
+            const buttons = document.querySelectorAll('.pacs-btn');
+
+            display.style.opacity = '0';
+            buttons.forEach(btn => btn.classList.remove('border-radioCream'));
+
+            setTimeout(() => {
+                display.src = data.img;
+                document.getElementById('pacs-modality').innerText = data.modality;
+                document.getElementById('pacs-kv').innerText = data.kv;
+                document.getElementById('pacs-mas').innerText = data.mas;
+                document.getElementById('pacs-id').innerText = data.id;
+                display.style.opacity = '0.9';
+            }, 300);
+
+            event.currentTarget.classList.add('border-radioCream');
+        }
+    </script>
+</body>
+</html>
